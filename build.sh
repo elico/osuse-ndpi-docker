@@ -28,7 +28,13 @@ mkdir -p /build/destdir/usr/lib64/xtables/ && \
 cp /usr/lib64/xtables/libxt_NDPI.so /build/destdir/usr/lib64/xtables/ && \
 mkdir -p /build/destdir/lib/modules/$KERNEL_VERSION/extra/ && \
 cp /build/nDPI/ndpi-netfilter/src/xt_ndpi.ko /build/destdir/lib/modules/$KERNEL_VERSION/extra/xt_ndpi.ko && \
+cp /build/nDPI/ndpi-netfilter/src/xt_ndpi.ko /build/destdir/lib/modules/$KERNEL_VERSION/extra/xt_ndpi.ko-non-stripped && \
+cd /build/destdir/usr/lib64/xtables/ && \
+ln -s libxt_NDPI.so libxt_ndpi.so && \
 echo $?
+
+strip --strip-debug /build/destdir/lib/modules/$KERNEL_VERSION/extra/xt_ndpi.ko
+
 #modprobe xt_ndpi && lsmod|grep ndpi
 #patch -p0 < /build/ipt-makefile.patch && \
 #patch -p0 < /build/src-makefile.patch && \
