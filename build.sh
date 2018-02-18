@@ -1,9 +1,17 @@
 #!/usr/bin/env bash
 
 cd /build
+
 rm -rf ./nDPI
-git clone -b netfilter https://github.com/vel21ripn/nDPI.git
+if [ -f "master.tar" ]; then
+        tar xvf master.tar
+else
+        git clone https://github.com/vel21ripn/nDPI
+        tar cvf master.tar nDPI
+fi
+
 cd nDPI
+git checkout netfilter
 ./autogen.sh
 # The autogen should run configure automatically
 #./configure
@@ -14,11 +22,14 @@ KERNEL_VERSION=`ls /lib/modules/`
 # pkg-config xtables --cflags 
 ls /build/
 mkdir /build/destdir
+chmod 777 /build/destdir
 #declare -x  DESTDIR=/build/destdir/
 ls
+cp -f /build/dummy-Makefile example/Makefile
 sed -i -e 's/-DOPENDPI_NETFILTER_MODULE/$(shell pkg-config --cflags xtables)/g' ndpi-netfilter/ipt/Makefile && \
 sed -i -e 's@MODULES_DIR := /lib/modules/$(shell uname -r)@MODULES_DIR := /lib/modules/$(shell ls /lib/modules/)@g' ndpi-netfilter/src/Makefile && \
 sed -i -e 's/depmod -a/depmod -a $(shell ls \/lib\/modules\/)/g' ndpi-netfilter/src/Makefile && \
+( cd src/lib ; make ndpi_network_list.c.inc ) && \
 cd ndpi-netfilter/ && \
 make -j9 && \
 make install && \
