@@ -39,7 +39,8 @@ mkdir -p /build/destdir/lib/modules/$KERNEL_VERSION/extra/ && \
 cp /build/nDPI/ndpi-netfilter/src/xt_ndpi.ko /build/destdir/lib/modules/$KERNEL_VERSION/extra/xt_ndpi.ko && \
 cp /build/nDPI/ndpi-netfilter/src/xt_ndpi.ko /build/destdir/lib/modules/$KERNEL_VERSION/extra/xt_ndpi.ko-non-stripped && \
 cd /build/destdir/usr/lib64/xtables/ && \
-ln -s libxt_NDPI.so libxt_ndpi.so && \
+#ln -s libxt_NDPI.so libxt_ndpi.so && \
+# The above is not required since the build creates this file and a symlink
 echo $?
 
 strip --strip-debug /build/destdir/lib/modules/$KERNEL_VERSION/extra/xt_ndpi.ko
